@@ -9,10 +9,6 @@ AlgoExplorer is an interactive algorithm playground with step-by-step visualizat
 - Command palette for fast navigation.
 - Responsive layout with a resizable chat panel.
 
-## Demo
-
-AI Studio: https://ai.studio/apps/drive/1VAr4LxK8TE32rqWWe7rWY3yhT14CioKU
-
 ## Quick Start
 
 **Prerequisites:** Node.js 18+
