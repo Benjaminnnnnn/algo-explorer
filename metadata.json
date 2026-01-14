@@ -1,0 +1,5 @@
+{
+  "name": "Algo",
+  "description": "An interactive algorithm visualizer for Binary Search, BFS, and DFS with an AI tutor assistant.",
+  "requestFramePermissions": []
+}
