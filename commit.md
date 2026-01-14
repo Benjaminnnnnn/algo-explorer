@@ -6,16 +6,16 @@ git add -p package.json
 
 git commit -m "chore: set up Vite project configuration"
 
-git add src/main.tsx src/App.tsx src/types.ts
+git add client/main.tsx client/App.tsx client/types.ts
 git commit -m "feat: add app entry and shared types"
 
-git add src/lib src/hooks
+git add client/lib client/hooks
 git commit -m "feat: add algorithm data and hooks"
 
-git add src/components/Visualizer.tsx src/components/Explore.tsx src/components/Explanation.tsx src/components/CommandPalette.tsx
+git add client/components/Visualizer.tsx client/components/Explore.tsx client/components/Explanation.tsx client/components/CommandPalette.tsx
 git commit -m "feat: add core visualizer components"
 
-git add src/services src/components/AIChat.tsx src/components/GeminiChat.tsx
+git add client/services client/components/AIChat.tsx client/components/GeminiChat.tsx
 git commit -m "feat: add AI chat services and UI"
 
 git add server/index.js

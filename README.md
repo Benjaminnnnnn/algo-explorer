@@ -39,7 +39,7 @@ npm run dev:server
 ## Project Structure
 
 ```
-src/
+client/
   components/   # UI components (Visualizer, AIChat, etc.)
   hooks/        # Custom hooks
   lib/          # Algorithm data + generators
