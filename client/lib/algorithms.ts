@@ -1812,10 +1812,14 @@ export const generateDijkstraFrames = (rows: number, cols: number, start: [numbe
 
     for (const [nr, nc] of neighbors) {
        if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && !grid[nr][nc].isWall) {
+           const neighborKey = `${nr},${nc}`;
+           if (visited.has(neighborKey)) continue;
+
            const newCost = cost + 1; // Unweighted edge cost = 1
-           if (newCost < (grid[nr][nc].distance || Infinity)) {
+           const currentDistance = grid[nr][nc].distance ?? Infinity;
+           if (newCost < currentDistance) {
                grid[nr][nc].distance = newCost;
-               parent.set(`${nr},${nc}`, currentKey);
+               parent.set(neighborKey, currentKey);
                pq.push({ r: nr, c: nc, cost: newCost });
            }
        }
