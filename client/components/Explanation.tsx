@@ -1,4 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import Prism from 'prismjs';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-c';
+import 'prismjs/components/prism-cpp';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/components/prism-python';
+import 'prismjs/themes/prism-tomorrow.css';
 import { AlgorithmType } from '../types';
 import { algorithmContent } from '../lib/algorithmContent';
 import { BookOpen, Clock, HardDrive, Code, Copy, Check } from 'lucide-react';
@@ -13,6 +20,13 @@ const Explanation: React.FC<ExplanationProps> = ({ algorithm }) => {
   const content = algorithmContent[algorithm];
   const [activeLang, setActiveLang] = useState<Language>('python');
   const [copied, setCopied] = useState(false);
+  const codeRef = useRef<HTMLElement | null>(null);
+
+  const languageClass: Record<Language, string> = {
+    cpp: 'cpp',
+    python: 'python',
+    javascript: 'javascript'
+  };
 
   const copyToClipboard = () => {
     if (content?.code[activeLang]) {
@@ -21,6 +35,12 @@ const Explanation: React.FC<ExplanationProps> = ({ algorithm }) => {
       setTimeout(() => setCopied(false), 2000);
     }
   };
+
+  useEffect(() => {
+    if (codeRef.current) {
+      Prism.highlightElement(codeRef.current);
+    }
+  }, [activeLang, content]);
 
   if (!content) {
     return (
@@ -100,8 +120,8 @@ const Explanation: React.FC<ExplanationProps> = ({ algorithm }) => {
                 {copied ? <Check size={16} className="text-emerald-400" /> : <Copy size={16} />}
             </button>
             <div className="bg-[#1e1e1e] p-6 overflow-x-auto">
-                <pre className="font-mono text-sm leading-relaxed text-[#d4d4d4]">
-                    <code>{content.code[activeLang]}</code>
+                <pre className="font-mono text-sm leading-relaxed">
+                    <code ref={codeRef} className={`language-${languageClass[activeLang]}`}>{content.code[activeLang]}</code>
                 </pre>
             </div>
           </div>
