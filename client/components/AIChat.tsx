@@ -1,4 +1,4 @@
-import { HelpCircle, Send, Sparkles } from "lucide-react";
+import { HelpCircle, Send, Sparkles, Trash2 } from "lucide-react";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { streamChatGptResponse } from "../services/chatgptService";
@@ -51,18 +51,20 @@ const AIChat: React.FC<AIChatProps> = ({ currentAlgo, currentFrame }) => {
     [provider, currentAlgo]
   );
 
+  const buildGreeting = () => ({
+    id: buildMessageId(),
+    role: "model" as const,
+    text: `Hello! I'm your AI tutor (${providerLabels[provider]}). I can explain how **${currentAlgo}** works, analyze its time complexity, or help you understand the current visualization step. Ask me anything!`,
+    timestamp: Date.now(),
+  });
+
   useEffect(() => {
     setIsRestored(false);
     try {
       const storedMessages = localStorage.getItem(`${storageKeyBase}:messages`);
       const storedDraft = localStorage.getItem(`${storageKeyBase}:draft`);
 
-      const greeting: ChatMessage = {
-        id: buildMessageId(),
-        role: "model",
-        text: `Hello! I'm your AI tutor (${providerLabels[provider]}). I can explain how **${currentAlgo}** works, analyze its time complexity, or help you understand the current visualization step. Ask me anything!`,
-        timestamp: Date.now(),
-      };
+      const greeting = buildGreeting();
 
       if (storedMessages) {
         const parsed = JSON.parse(storedMessages);
@@ -257,6 +259,18 @@ ${currentFrame.type === "linked-list" ? `- Current Action on List.` : ""}
     setIsLoading(false);
   };
 
+  const handleClearConversation = () => {
+    handleStop();
+    setMessages([buildGreeting()]);
+    setInput("");
+    try {
+      localStorage.removeItem(`${storageKeyBase}:messages`);
+      localStorage.removeItem(`${storageKeyBase}:draft`);
+    } catch (error) {
+      console.warn("Failed to clear chat session:", error);
+    }
+  };
+
   return (
     <div
       className="relative flex flex-col h-full min-h-0 bg-white border-l border-slate-200 w-full shadow-xl z-20"
@@ -283,7 +297,16 @@ ${currentFrame.type === "linked-list" ? `- Current Action on List.` : ""}
             </p>
           </div>
         </div>
-        <div className="flex items-center bg-slate-100 rounded-full p-1 ring-1 ring-slate-200">
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={handleClearConversation}
+            className="p-2 rounded-full bg-white border border-slate-200 text-slate-500 hover:text-slate-700 hover:border-slate-300 shadow-sm transition-colors"
+            aria-label="Clear conversation"
+          >
+            <Trash2 size={14} />
+          </button>
+          <div className="flex items-center bg-slate-100 rounded-full p-1 ring-1 ring-slate-200">
           {(["gemini", "chatgpt"] as AIProvider[]).map((option) => (
             <button
               key={option}
@@ -298,6 +321,7 @@ ${currentFrame.type === "linked-list" ? `- Current Action on List.` : ""}
               {providerLabels[option]}
             </button>
           ))}
+          </div>
         </div>
       </div>
 
